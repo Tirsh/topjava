@@ -38,11 +38,11 @@
     <c:forEach var="mealTo" items="${mealToList}">
         <jsp:useBean id="mealTo" type="ru.javawebinar.topjava.model.MealTo"/>
         <tr class="${mealTo.excess ? "red": "green"}">
-            <td>${mealTo.getDate()} ${mealTo.getTime()}</td>
-            <td>${mealTo.getDescription()}</td>
-            <td>${mealTo.getCalories()}</td>
-            <td><a href="meals?action=edit&mealId=${mealTo.getMealId()}">Edit</a></td>
-            <td><a href="meals?action=delete&mealId=${mealTo.getMealId()}">Delete</a></td>
+            <td>${mealTo.date} ${mealTo.time}</td>
+            <td>${mealTo.description}</td>
+            <td>${mealTo.calories}</td>
+            <td><a href="meals?action=edit&mealId=${mealTo.id}">Edit</a></td>
+            <td><a href="meals?action=delete&mealId=${mealTo.id}">Delete</a></td>
         </tr>
     </c:forEach>
 </table>

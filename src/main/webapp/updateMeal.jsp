@@ -2,7 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Edit Meal</title>
+    <jsp:useBean id="newMeal" scope="request" type="java.lang.Boolean"/>
+    <title>${newMeal ? "Add": "Edit"} meal</title>
     <style>
         div.field {
             padding-bottom: 5px;
@@ -23,28 +24,31 @@
     </style>
 </head>
 <body>
-<h3><a href="../index.html">Home</a></h3>
+<h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>Edit Meal</h2>
+<h2>${newMeal ? "Add": "Edit"} Meal</h2>
 <form action="" method="post">
     <jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
-    <input type="hidden" name="Id" value="<c:out value="${meal.getMealId()}" />"/> <br/>
+    <input type="hidden" name="new" value="${newMeal}" /><br/>
+    <input type="hidden" name="id" value="${meal.id}" /> <br/>
     <div class="field">
         <label>DateTime :</label>
-        <input type="datetime-local" name="DateTime" value="<c:out value="${meal.getDateTime()}" />"/>
+        <input type="datetime-local" name="dateTime" value="${meal.dateTime}" />
     </div>
     <div class="field">
         <label>Description :</label>
-        <input type="text" name="Description" value="<c:out value="${meal.getDescription()}" />"/>
+        <input type="text" name="description" value="${meal.description}" />
     </div>
     <div class="field">
         <label>Calories :</label>
-        <input type="number" name="Calories" value="<c:out value="${meal.getCalories()}" />"/>
+        <input type="number" name="calories" value="${meal.calories}" />
     </div>
     <label></label>
     <input type="submit" value="Save"/>
 </form>
-<button onclick="window.location.href = 'meals?action=mealList';">Cancel</button>
+<hr>
+<button onclick="window.location.href = '${newMeal ? "meals?action=delete&mealId=".concat(meal.id): "meals"}';">Cancel</button>
+
 
 </body>
 </html>

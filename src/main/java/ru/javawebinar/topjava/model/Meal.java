@@ -1,21 +1,17 @@
 package ru.javawebinar.topjava.model;
 
-import ru.javawebinar.topjava.CRUD.MealDataInMemory;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Meal {
-    private final int mealId;
+    private final int id;
     private LocalDateTime dateTime;
-
     private String description;
-
     private int calories;
 
-    public Meal(LocalDateTime dateTime, String description, int calories) {
-        mealId = MealDataInMemory.getIdCounter();
+    public Meal(int id, LocalDateTime dateTime, String description, int calories) {
+        this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
@@ -41,8 +37,8 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-    public int getMealId() {
-        return mealId;
+    public int getId() {
+        return id;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
