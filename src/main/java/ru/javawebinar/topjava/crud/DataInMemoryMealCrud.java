@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.CRUD;
+package ru.javawebinar.topjava.crud;
 
 import ru.javawebinar.topjava.data.ProjectData;
 import ru.javawebinar.topjava.model.Meal;

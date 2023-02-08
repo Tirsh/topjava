@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.CRUD.MealCrud;
-import ru.javawebinar.topjava.CRUD.DataInMemoryMealCrud;
+import ru.javawebinar.topjava.crud.MealCrud;
+import ru.javawebinar.topjava.crud.DataInMemoryMealCrud;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
