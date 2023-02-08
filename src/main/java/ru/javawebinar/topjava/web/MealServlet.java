@@ -86,7 +86,7 @@ public class MealServlet extends HttpServlet {
         } else {
             int id = Integer.parseInt(req.getParameter("id"));
             inputtedMeal.setId(id);
-            mealCrud.update(inputtedMeal);
+            mealCrud.update(id, inputtedMeal);
             log.debug("update meal");
         }
         resp.sendRedirect("meals");

@@ -4,14 +4,13 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataInMemoryMealCrud implements MealCrud {
-    private AtomicInteger idCounter;
-    private final List<Meal> meals = new CopyOnWriteArrayList<>();
+    private final AtomicInteger idCounter;
+    private final Map<Integer, Meal> meals = new ConcurrentHashMap<>();
 
     {
         this.idCounter = new AtomicInteger(0);
@@ -32,35 +31,37 @@ public class DataInMemoryMealCrud implements MealCrud {
 
     @Override
     public List<Meal> getAll() {
-        return meals;
+        return new ArrayList<>(meals.values());
     }
 
     @Override
     public Meal getById(int id) {
-        return meals.stream().filter(m -> m.getId() == id).findFirst().orElse(null);
+        return meals.get(id);
     }
 
     @Override
-    public void delete(int mealId) {
-        meals.removeIf(meal -> meal.getId() == mealId);
+    public void delete(int id) {
+        meals.remove(id);
     }
 
     @Override
-    public Meal update(Meal meal) {
-        for (Meal m : meals) {
-            if (m.getId() == meal.getId()) {
-                m.setDateTime(meal.getDateTime());
-                m.setDescription(meal.getDescription());
-                m.setCalories(meal.getCalories());
-            }
+    public Meal update(int id, Meal meal) {
+        if (meals.containsKey(id)) {
+            meals.get(id).setDateTime(meal.getDateTime());
+            meals.get(id).setDescription(meal.getDescription());
+            meals.get(id).setCalories(meal.getCalories());
+            return meal;
         }
-        return meal;
+        else {
+            return null;
+        }
     }
 
     @Override
     public Meal add(Meal meal) {
-        meal.setId(this.getId());
-        meals.add(meal);
+        int id = this.getId();
+        meal.setId(id);
+        meals.put(id, meal);
         return meal;
     }
 }

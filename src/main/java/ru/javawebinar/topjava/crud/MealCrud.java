@@ -11,7 +11,7 @@ public interface MealCrud {
 
     void delete(int id);
 
-    Meal update(Meal meal);
+    Meal update(int id, Meal meal);
 
     Meal add(Meal meal);
 }
