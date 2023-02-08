@@ -25,13 +25,12 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         mealCrud = new DataInMemoryMealCrud();
-        super.init();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String action = req.getParameter("action");
-        if(action == null){
+        if (action == null) {
             action = "show";
         }
         String path = "/meals.jsp";
@@ -57,14 +56,19 @@ public class MealServlet extends HttpServlet {
                 req.setAttribute("newMeal", Boolean.TRUE);
                 path = "/updateMeal.jsp";
                 break;
+            default:
+                resp.sendRedirect("meals");
+                return;
         }
         req.getRequestDispatcher(path).forward(req, resp);
     }
-    private int getMealId(HttpServletRequest req){
+
+    private int getMealId(HttpServletRequest req) {
         return Integer.parseInt(req.getParameter("mealId"));
     }
+
     private Meal createNewMeal() {
-        return new Meal(mealCrud.getNextId(), LocalDateTime.now().withSecond(0).withNano(0), "", 0);
+        return new Meal(LocalDateTime.now().withSecond(0).withNano(0), "", 0);
     }
 
     @Override
@@ -74,14 +78,15 @@ public class MealServlet extends HttpServlet {
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String description = req.getParameter("description");
         int calories = Integer.parseInt(req.getParameter("calories"));
-        int id = Integer.parseInt(req.getParameter("id"));
         boolean isNew = Boolean.parseBoolean(req.getParameter("new"));
-        if (isNew){
-            mealCrud.add(new Meal(id, localDateTime, description, calories));
+        Meal inputtedMeal = new Meal(localDateTime, description, calories);
+        if (isNew) {
+            mealCrud.add(inputtedMeal);
             log.debug("add new meal");
-        }
-        else {
-            mealCrud.update(new Meal(id, localDateTime, description, calories));
+        } else {
+            int id = Integer.parseInt(req.getParameter("id"));
+            inputtedMeal.setId(id);
+            mealCrud.update(inputtedMeal);
             log.debug("update meal");
         }
         resp.sendRedirect("meals");

@@ -30,7 +30,9 @@
 <form action="" method="post">
     <jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
     <input type="hidden" name="new" value="${newMeal}" /><br/>
-    <input type="hidden" name="id" value="${meal.id}" /> <br/>
+    <c:if test="${!newMeal}">
+        <input type="hidden" name="id" value="${meal.id}" /> <br/>
+    </c:if>
     <div class="field">
         <label>DateTime :</label>
         <input type="datetime-local" name="dateTime" value="${meal.dateTime}" />
@@ -47,7 +49,7 @@
     <input type="submit" value="Save"/>
 </form>
 <hr>
-<button onclick="window.location.href = '${newMeal ? "meals?action=delete&mealId=".concat(meal.id): "meals"}';">Cancel</button>
+<button onclick="window.location.href = 'meals';">Cancel</button>
 
 
 </body>

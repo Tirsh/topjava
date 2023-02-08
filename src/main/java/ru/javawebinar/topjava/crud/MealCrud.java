@@ -1,10 +1,10 @@
 package ru.javawebinar.topjava.crud;
+
 import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 
 public interface MealCrud {
-    int getNextId();
     List<Meal> getAll();
 
     Meal getById(int id);
