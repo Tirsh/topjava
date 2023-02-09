@@ -23,7 +23,7 @@ public class MealServlet extends HttpServlet {
     private MealCrud mealCrud;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         mealCrud = new DataInMemoryMealCrud();
     }
 
@@ -74,16 +74,16 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
+        String action = req.getParameter("action");
         String dateTime = req.getParameter("dateTime");
         LocalDateTime localDateTime = LocalDateTime.parse(dateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String description = req.getParameter("description");
         int calories = Integer.parseInt(req.getParameter("calories"));
-        boolean isNew = Boolean.parseBoolean(req.getParameter("new"));
         Meal inputtedMeal = new Meal(localDateTime, description, calories);
-        if (isNew) {
+        if (action.equals("add")) {
             mealCrud.add(inputtedMeal);
             log.debug("add new meal");
-        } else {
+        } else if (action.equals("edit")){
             int id = Integer.parseInt(req.getParameter("id"));
             inputtedMeal.setId(id);
             mealCrud.update(id, inputtedMeal);

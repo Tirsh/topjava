@@ -2,8 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <jsp:useBean id="newMeal" scope="request" type="java.lang.Boolean"/>
-    <title>${newMeal ? "Add": "Edit"} meal</title>
+    <title>${param.action.equals("add") ? "Add": "Edit"} meal</title>
     <style>
         div.field {
             padding-bottom: 5px;
@@ -26,11 +25,11 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>${newMeal ? "Add": "Edit"} Meal</h2>
+<h2>${param.action.equals("add")? "Add": "Edit"} Meal</h2>
 <form action="" method="post">
     <jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
     <input type="hidden" name="new" value="${newMeal}" /><br/>
-    <c:if test="${!newMeal}">
+    <c:if test='${param.action.equals("edit")}'>
         <input type="hidden" name="id" value="${meal.id}" /> <br/>
     </c:if>
     <div class="field">
@@ -50,7 +49,5 @@
 </form>
 <hr>
 <button onclick="window.location.href = 'meals';">Cancel</button>
-
-
 </body>
 </html>
