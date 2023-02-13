@@ -12,13 +12,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-@Repository
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
-    private final Map<Integer, User> repository = new ConcurrentHashMap<>();
+    private final Map<Integer, User> repository;
     private final AtomicInteger counter = new AtomicInteger(0);
 
-    {
+    public InMemoryUserRepository() {
+        repository = new ConcurrentHashMap<>();
         ValidationUtil.users.forEach(this::save);
     }
 
