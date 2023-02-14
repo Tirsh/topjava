@@ -16,6 +16,5 @@ public interface MealRepository {
     Meal get(int id);
 
     // ORDERED dateTime desc
-    Collection<Meal> getAll();
-    Collection<Meal> getByUserId(int userId);
+    Collection<Meal> getAuthUserMeal(Integer id);
 }

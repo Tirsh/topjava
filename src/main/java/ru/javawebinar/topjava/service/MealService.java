@@ -28,11 +28,8 @@ public class MealService {
     public Meal get(int id){
         return ValidationUtil.checkNotFoundWithId(repository.get(id), id);
     }
-    public Collection<Meal> getAll(){
-        return repository.getAll();
-    }
-    public Collection<Meal> getByUserId(int id){
-        return ValidationUtil.checkNotFoundWithId(repository.getByUserId(id), id);
+    public Collection<Meal> getAuthUserMeal(Integer id){
+        return ValidationUtil.checkNotFoundWithId(repository.getAuthUserMeal(id), id);
     }
     public void update(Meal meal) {
         checkNotFoundWithId(repository.save(meal), meal.getId());
