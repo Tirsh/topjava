@@ -4,10 +4,9 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
-import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,16 +16,20 @@ import java.util.stream.Collectors;
 public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
+    private int userId;
 
     {
-        MealsUtil.meals.forEach(this::save);
+        MealsUtil.meals.forEach(meal -> {
+            this.userId = meal.getUserId();
+            this.save(meal);
+        });
     }
 
     @Override
     public Meal save(Meal meal) {
-        if (meal.getUserId() != null && meal.getUserId() != SecurityUtil.authUserId())
+        if (meal.getUserId() != null && !isUserMeal(meal))
             return null;
-        meal.setUserId(SecurityUtil.authUserId());
+        meal.setUserId(userId);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
@@ -38,20 +41,28 @@ public class InMemoryMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id) {
-        return repository.get(id).getUserId() == SecurityUtil.authUserId() && repository.remove(id) != null;
+        return isUserMeal(repository.get(id)) && repository.remove(id) != null;
     }
 
     @Override
     public Meal get(int id) {
-        return repository.get(id);
+        return isUserMeal(repository.get(id)) ? repository.get(id) : null;
     }
 
     @Override
-    public Collection<Meal> getAuthUserMeal(Integer id) {
+    public List<Meal> getAll(Integer id) {
         return repository.values().stream()
-                .filter(meal -> meal.getUserId() == id)
-                .sorted(Comparator.comparing(Meal::getDate).reversed())
+                .filter(meal -> meal.getUserId().equals(id))
+                .sorted(Comparator.comparing(Meal::getDate).thenComparing(Meal::getTime).reversed())
                 .collect(Collectors.toList());
+    }
+
+    public void setUserId(int id) {
+        this.userId = id;
+    }
+
+    private boolean isUserMeal(Meal meal) {
+        return meal.getUserId() == userId;
     }
 }
 

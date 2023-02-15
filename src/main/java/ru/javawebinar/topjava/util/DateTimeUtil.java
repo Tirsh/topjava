@@ -7,8 +7,6 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public static <T extends Comparable<? super T>> boolean isBetween(T t, T t1, T t2) {
         return (t1 == null || t.compareTo(t1) >= 0) &&
@@ -20,11 +18,11 @@ public class DateTimeUtil {
     }
 
     public static LocalDate toLocalDate(String s) {
-        return (s == null || s.equals("")) ? null : LocalDate.parse(s, DATE_FORMATTER);
+        return (s == null || s.isEmpty()) ? null : LocalDate.parse(s, DateTimeFormatter.ISO_DATE);
     }
 
     public static LocalTime toLocalTime(String s) {
-        return (s == null || s.equals("")) ? null : LocalTime.parse(s, TIME_FORMATTER);
+        return (s == null || s.isEmpty()) ? null : LocalTime.parse(s, DateTimeFormatter.ISO_TIME);
     }
 }
 

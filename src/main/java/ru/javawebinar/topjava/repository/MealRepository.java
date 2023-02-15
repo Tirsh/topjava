@@ -2,10 +2,12 @@ package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.util.Collection;
+import java.util.List;
 
 
 public interface MealRepository {
+    void setUserId(int id);
+
     // null if updated meal does not belong to userId
     Meal save(Meal meal);
 
@@ -16,5 +18,5 @@ public interface MealRepository {
     Meal get(int id);
 
     // ORDERED dateTime desc
-    Collection<Meal> getAuthUserMeal(Integer id);
+    List<Meal> getAll(Integer id);
 }

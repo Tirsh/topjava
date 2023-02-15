@@ -19,14 +19,14 @@ import java.util.stream.Collectors;
 public class InMemoryUserRepository implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepository.class);
     private final Map<Integer, User> repository;
-    private final AtomicInteger counter = new AtomicInteger(1);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
     public InMemoryUserRepository() {
+        repository = new ConcurrentHashMap<>();
         List<User> users = Arrays.asList(
                 new User(null, "Ivan Ivanov", "ivan@mail.ru", "qwerty", Role.USER),
                 new User(null, "Petr Petrov", "petr@mail.ru", "love", Role.USER)
         );
-        repository = new ConcurrentHashMap<>();
         users.forEach(this::save);
     }
 

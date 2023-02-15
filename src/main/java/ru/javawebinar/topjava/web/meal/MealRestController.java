@@ -12,7 +12,6 @@ import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collection;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -20,42 +19,46 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @Controller
 public class MealRestController {
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private MealService service;
 
     public Meal get(int id) {
+        getUserId();
         log.info("get {}", id);
         return service.get(id);
     }
 
     public Meal create(Meal meal) {
+        getUserId();
         log.info("create {}", meal);
         checkNew(meal);
         return service.create(meal);
     }
 
     public void delete(int id) {
+        getUserId();
         log.info("delete {}", id);
         service.delete(id);
     }
 
     public void update(Meal meal, int id) {
+        getUserId();
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
         service.update(meal);
     }
 
-    public Collection<Meal> getAuthUserMeal() {
-        log.info("getAuthUserMeal");
-        return service.getAuthUserMeal(SecurityUtil.authUserId());
+    public List<MealTo> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        getUserId();
+        log.info("getAllMeals");
+        return MealsUtil.getFilteredTos(service.getAll(SecurityUtil.setAuthUserId()),
+                SecurityUtil.authUserCaloriesPerDay(), startDate, endDate, startTime, endTime);
     }
 
-    public List<MealTo> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        log.info("getAllMeals");
-        return MealsUtil.getFilteredTos(service.getAuthUserMeal(SecurityUtil.authUserId()),
-                SecurityUtil.authUserCaloriesPerDay(), startDate, endDate, startTime, endTime);
+    public void getUserId() {
+        service.getUserId(SecurityUtil.setAuthUserId());
     }
 
 }

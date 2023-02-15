@@ -6,7 +6,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DateTimeUtil;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletException;
@@ -82,10 +81,10 @@ public class MealServlet extends HttpServlet {
                 LocalDate endDate = DateTimeUtil.toLocalDate(request.getParameter("endDate"));
                 LocalTime startTime = DateTimeUtil.toLocalTime(request.getParameter("startTime"));
                 LocalTime endTime = DateTimeUtil.toLocalTime(request.getParameter("endTime"));
-                request.setAttribute("startDate", startDate);
-                request.setAttribute("endDate", endDate);
-                request.setAttribute("startTime", startTime);
-                request.setAttribute("endTime", endTime);
+//                request.setAttribute("startDate", startDate);
+//                request.setAttribute("endDate", endDate);
+//                request.setAttribute("startTime", startTime);
+//                request.setAttribute("endTime", endTime);
                 request.setAttribute("meals", controller.getAll(startDate, endDate, startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
