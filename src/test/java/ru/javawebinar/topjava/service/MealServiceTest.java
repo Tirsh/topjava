@@ -28,7 +28,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class MealServiceTest extends TestCase {
+public class MealServiceTest {
     @Autowired
     private MealService service;
 
@@ -110,7 +110,7 @@ public class MealServiceTest extends TestCase {
     @Test
     public void filterWithNullBoards() {
         List<Meal> mealList = service.getBetweenInclusive(null, null, USER_ID);
-        assertMatch(mealList, service.getAll(USER_ID));
+        assertMatch(mealList, userMeal6, userMeal5, userMeal4, userMeal3, userMeal2, userMeal1);
     }
 
 }
