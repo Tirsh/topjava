@@ -19,6 +19,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -38,7 +39,7 @@ public class MealServiceTest {
 
     @Rule
     public TestWatcher watchman = new TestWatcher() {
-        private double start;
+        private long start;
 
         @Override
         protected void starting(Description description) {
@@ -46,20 +47,10 @@ public class MealServiceTest {
         }
 
         @Override
-        protected void failed(Throwable e, Description description) {
-            logTestInfo(description);
-        }
-
-        @Override
-        protected void succeeded(Description description) {
-            logTestInfo(description);
-        }
-
-        private void logTestInfo(Description description) {
-            double runtime = (System.nanoTime() - start) / 1_000_000;
+        protected void finished(Description description) {
+            long runtime = TimeUnit.MILLISECONDS.convert(System.nanoTime() - start, TimeUnit.NANOSECONDS);
             log.info("{} has been run for {} milliseconds.", description.getMethodName(), runtime);
-            watchedLog.append(String.format("%-40s %.4f ms \n", description.getMethodName(), runtime));
-
+            watchedLog.append(String.format("%-40s %d ms \n", description.getMethodName(), runtime));
         }
     };
 

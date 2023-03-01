@@ -26,7 +26,7 @@ public class Meal extends AbstractBaseEntity {
     public static final String GET_BETWEEN = "Meal.getBetween";
     public static final String DELETE = "Meal.delete";
 
-    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp default now()")
+    @Column(name = "date_time", nullable = false, columnDefinition = "timestamp")
     @NotNull
     private LocalDateTime dateTime;
 
@@ -35,7 +35,7 @@ public class Meal extends AbstractBaseEntity {
     @Size(max = 128)
     private String description;
 
-    @Column(name = "calories", nullable = false, columnDefinition = "int default 2000")
+    @Column(name = "calories", nullable = false, columnDefinition = "int")
     @Range(min = 10, max = 10000)
     private int calories;
 
