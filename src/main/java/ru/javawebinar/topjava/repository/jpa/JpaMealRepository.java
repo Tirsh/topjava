@@ -27,13 +27,13 @@ public class JpaMealRepository implements MealRepository {
             meal.setUser(ref);
             em.persist(meal);
         } else {
-            if (em.createNamedQuery(Meal.UPDATE)
-                    .setParameter("id", meal.getId())
-                    .setParameter("userId", userId)
-                    .setParameter("dateTime", meal.getDateTime())
-                    .setParameter("description", meal.getDescription())
-                    .setParameter("calories", meal.getCalories())
-                    .executeUpdate() == 0) {
+            Meal mealRef = em.getReference(Meal.class, meal.getId());
+            if (mealRef.getUser().getId() == userId) {
+                mealRef.setDateTime(meal.getDateTime());
+                mealRef.setDescription(meal.getDescription());
+                mealRef.setCalories(meal.getCalories());
+            }
+            else{
                 return null;
             }
         }
@@ -43,8 +43,8 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public boolean delete(int id, int userId) {
-        return em.createNamedQuery(Meal.DELETE).
-                setParameter("id", id)
+        return em.createNamedQuery(Meal.DELETE)
+                .setParameter("id", id)
                 .setParameter("userId", userId)
                 .executeUpdate() != 0;
     }

@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,29 +33,41 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
-    private static final StringBuilder watchedLog = new StringBuilder();
-    private long start;
-
+    private static final StringBuilder watchedLog = new StringBuilder("\n");
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Rule
     public TestWatcher watchman = new TestWatcher() {
+        private double start;
+
         @Override
         protected void starting(Description description) {
-            start = System.currentTimeMillis();
+            start = System.nanoTime();
+        }
+
+        @Override
+        protected void failed(Throwable e, Description description) {
+            logTestInfo(description);
         }
 
         @Override
         protected void succeeded(Description description) {
-            long delta = System.currentTimeMillis() - start;
-            System.out.println(description + " " + delta);
-            watchedLog.append(description).append(" ____________ ").append("success! ==  ").append(delta).append("ms \n");
+            logTestInfo(description);
+        }
+
+        private void logTestInfo(Description description) {
+            double runtime = (System.nanoTime() - start) / 1_000_000;
+            log.info("{} has been run for {} milliseconds.", description.getMethodName(), runtime);
+            watchedLog.append(String.format("%-40s %.4f ms \n", description.getMethodName(), runtime));
+
         }
     };
+
     @ClassRule
     public static TestWatcher classWatcher = new TestWatcher() {
         @Override
         protected void finished(Description description) {
-            System.out.println(watchedLog);
+            log.info(watchedLog.toString());
         }
     };
 
