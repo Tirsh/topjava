@@ -1,10 +1,14 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assume;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -16,10 +20,7 @@ import ru.javawebinar.topjava.TimingRules;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
+@ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml"})
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
@@ -27,6 +28,9 @@ public abstract class AbstractServiceTest {
 
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
+
+    @Autowired
+    Environment env;
 
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
@@ -40,5 +44,9 @@ public abstract class AbstractServiceTest {
                 throw getRootCause(e);
             }
         });
+    }
+
+    protected void assumeTest(String... profiles) {
+        Assume.assumeTrue(env.acceptsProfiles(Profiles.of(profiles)));
     }
 }
