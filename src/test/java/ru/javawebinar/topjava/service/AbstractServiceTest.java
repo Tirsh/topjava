@@ -26,11 +26,11 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractServiceTest {
 
-    @ClassRule
-    public static ExternalResource summary = TimingRules.SUMMARY;
-
     @Autowired
     Environment env;
+
+    @ClassRule
+    public static ExternalResource summary = TimingRules.SUMMARY;
 
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
@@ -45,7 +45,6 @@ public abstract class AbstractServiceTest {
             }
         });
     }
-
     protected void assumeTest(String... profiles) {
         Assume.assumeTrue(env.acceptsProfiles(Profiles.of(profiles)));
     }
